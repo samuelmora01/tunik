@@ -15,20 +15,20 @@ router.get('/evaluaciones', ratingsController.findAll);
 // GET /api/evaluaciones/summary
 router.get('/evaluaciones/summary', ratingsController.getSummary);
 
-// GET /api/evaluaciones/:idevaluacionservicios
-router.get('/evaluaciones/:idevaluacionservicios', ratingsController.findById);
+// GET /api/evaluaciones/:idevaluacion
+router.get('/evaluaciones/:idevaluacion', ratingsController.findById);
 
 // POST /api/evaluaciones
 router.post('/evaluaciones', [
-  body('idventas').isInt().withMessage('ID de venta es requerido'),
-  body('calificacion').isInt({ min: 1, max: 5 }).withMessage('Calificación debe ser entre 1 y 5'),
+  body('numero_documento').notEmpty().withMessage('Número de documento es requerido'),
+  body('idservicios').isInt().withMessage('ID de servicio es requerido'),
   validate
 ], ratingsController.create);
 
-// PUT /api/evaluaciones/:idevaluacionservicios
-router.put('/evaluaciones/:idevaluacionservicios', ratingsController.update);
+// PUT /api/evaluaciones/:idevaluacion
+router.put('/evaluaciones/:idevaluacion', ratingsController.update);
 
-// DELETE /api/evaluaciones/:idevaluacionservicios
-router.delete('/evaluaciones/:idevaluacionservicios', ratingsController.delete);
+// DELETE /api/evaluaciones/:idevaluacion
+router.delete('/evaluaciones/:idevaluacion', ratingsController.delete);
 
 module.exports = router;

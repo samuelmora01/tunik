@@ -16,7 +16,7 @@ if (process.env.DATABASE_URL) {
       freezeTableName: true
     },
     pool: {
-      max: 10,
+      max: 2,
       min: 0,
       acquire: 30000,
       idle: 10000

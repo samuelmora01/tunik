@@ -15,8 +15,9 @@ router.get('/productos', inventoryController.findAllProductos);
 
 // POST /api/productos
 router.post('/productos', [
-  body('nombreproducto').notEmpty().withMessage('Nombre del producto es requerido'),
+  body('nombreproductos').notEmpty().withMessage('Nombre del producto es requerido'),
   body('precio').isDecimal().withMessage('Precio es requerido'),
+  body('cantidadexistente').isInt({ min: 0 }).withMessage('Cantidad existente es requerida'),
   validate
 ], inventoryController.createProducto);
 
@@ -49,9 +50,7 @@ router.get('/pedidos', inventoryController.findAllPedidos);
 // POST /api/pedidos
 router.post('/pedidos', [
   body('idproveedor').isInt().withMessage('Proveedor es requerido'),
-  body('idproductos').isInt().withMessage('Producto es requerido'),
-  body('cantidad').isInt({ min: 1 }).withMessage('Cantidad debe ser mayor a 0'),
-  body('fecha').notEmpty().withMessage('Fecha es requerida'),
+  body('fechaPedido').notEmpty().withMessage('Fecha del pedido es requerida'),
   validate
 ], inventoryController.createPedido);
 

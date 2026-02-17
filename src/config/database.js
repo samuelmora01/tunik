@@ -15,7 +15,7 @@ module.exports = {
       freezeTableName: true
     },
     pool: {
-      max: 10,
+      max: 3,
       min: 0,
       acquire: 30000,
       idle: 10000
@@ -49,8 +49,8 @@ module.exports = {
       freezeTableName: true
     },
     pool: {
-      max: 20,
-      min: 5,
+      max: 4,
+      min: 1,
       acquire: 30000,
       idle: 10000
     }

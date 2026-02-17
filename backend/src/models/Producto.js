@@ -7,22 +7,26 @@ const Producto = sequelize.define('Producto', {
     primaryKey: true,
     autoIncrement: true
   },
-  nombreproducto: {
+  idproveedor: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'proveedores',
+      key: 'idproveedor'
+    }
+  },
+  nombreproductos: {
     type: DataTypes.STRING(100),
     allowNull: false
-  },
-  descripcion: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  stock: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
   },
   precio: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
+  },
+  cantidadexistente: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   tableName: 'productos',

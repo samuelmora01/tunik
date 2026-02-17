@@ -15,26 +15,23 @@ const Pedido = sequelize.define('Pedido', {
       key: 'idproveedor'
     }
   },
-  idproductos: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'productos',
-      key: 'idproductos'
-    }
-  },
-  cantidad: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  fecha: {
+  fechaPedido: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: false,
+    field: 'fechaPedido'
   },
   estado: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: true,
     defaultValue: 'Pendiente'
+  },
+  numero_documento: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    references: {
+      model: 'usuarios',
+      key: 'numero_documento'
+    }
   }
 }, {
   tableName: 'pedidos',

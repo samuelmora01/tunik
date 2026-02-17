@@ -95,13 +95,21 @@ MetodoPago.hasMany(PagoVenta, { foreignKey: 'idmpago', as: 'pagos' });
 Pedido.belongsTo(Proveedor, { foreignKey: 'idproveedor', as: 'proveedor' });
 Proveedor.hasMany(Pedido, { foreignKey: 'idproveedor', as: 'pedidos' });
 
-// Pedido - Producto
-Pedido.belongsTo(Producto, { foreignKey: 'idproductos', as: 'producto' });
-Producto.hasMany(Pedido, { foreignKey: 'idproductos', as: 'pedidos' });
+// Pedido - User
+Pedido.belongsTo(User, { foreignKey: 'numero_documento', as: 'usuario' });
+User.hasMany(Pedido, { foreignKey: 'numero_documento', as: 'pedidos' });
 
-// EvaluacionServicio - Venta
-EvaluacionServicio.belongsTo(Venta, { foreignKey: 'idventas', as: 'venta' });
-Venta.hasMany(EvaluacionServicio, { foreignKey: 'idventas', as: 'evaluaciones' });
+// Producto - Proveedor
+Producto.belongsTo(Proveedor, { foreignKey: 'idproveedor', as: 'proveedor' });
+Proveedor.hasMany(Producto, { foreignKey: 'idproveedor', as: 'productos' });
+
+// EvaluacionServicio - User
+EvaluacionServicio.belongsTo(User, { foreignKey: 'numero_documento', as: 'usuario' });
+User.hasMany(EvaluacionServicio, { foreignKey: 'numero_documento', as: 'evaluaciones' });
+
+// EvaluacionServicio - Servicio
+EvaluacionServicio.belongsTo(Servicio, { foreignKey: 'idservicios', as: 'servicio' });
+Servicio.hasMany(EvaluacionServicio, { foreignKey: 'idservicios', as: 'evaluaciones' });
 
 module.exports = {
   sequelize,

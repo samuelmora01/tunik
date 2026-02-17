@@ -48,6 +48,21 @@ const errorMiddleware = (err, req, res, next) => {
     });
   }
 
+  if (err.name === 'SequelizeConnectionError' || err.name === 'SequelizeConnectionRefusedError') {
+    return res.status(503).json({
+      ok: false,
+      msg: 'Error de conexión a la base de datos. Intente nuevamente.'
+    });
+  }
+
+  if (err.name === 'SequelizeDatabaseError') {
+    return res.status(500).json({
+      ok: false,
+      msg: 'Error en la base de datos',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Error interno del servidor';
 

@@ -2,31 +2,34 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection');
 
 const EvaluacionServicio = sequelize.define('EvaluacionServicio', {
-  idevaluacionservicios: {
+  idevaluacion: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  idventas: {
+  numero_documento: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    references: {
+      model: 'usuarios',
+      key: 'numero_documento'
+    }
+  },
+  idservicios: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'ventas',
-      key: 'idventas'
+      model: 'servicios',
+      key: 'idservicios'
     }
   },
-  calificacion: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  comentario: {
-    type: DataTypes.TEXT,
+  respuestacalificacion: {
+    type: DataTypes.STRING(255),
     allowNull: true
   },
-  fecha: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW
+  comentarios: {
+    type: DataTypes.STRING(500),
+    allowNull: true
   }
 }, {
   tableName: 'evaluacionservicios',

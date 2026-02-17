@@ -8,17 +8,19 @@ class InventoryService {
     const where = {};
 
     if (q) {
-      where[Op.or] = [
-        { nombreproducto: { [Op.like]: `%${q}%` } },
-        { descripcion: { [Op.like]: `%${q}%` } }
-      ];
+      where.nombreproductos = { [Op.like]: `%${q}%` };
     }
 
-    return await Producto.findAll({ where });
+    return await Producto.findAll({ 
+      where,
+      include: [{ model: Proveedor, as: 'proveedor' }]
+    });
   }
 
   async findProductoById(idproductos) {
-    const producto = await Producto.findByPk(idproductos);
+    const producto = await Producto.findByPk(idproductos, {
+      include: [{ model: Proveedor, as: 'proveedor' }]
+    });
     if (!producto) {
       const error = new Error('Producto no encontrado');
       error.statusCode = 404;
@@ -39,7 +41,7 @@ class InventoryService {
       throw error;
     }
     await producto.update(data);
-    return producto;
+    return await this.findProductoById(idproductos);
   }
 
   async deleteProducto(idproductos) {
@@ -110,18 +112,16 @@ class InventoryService {
     return await Pedido.findAll({
       where,
       include: [
-        { model: Proveedor, as: 'proveedor' },
-        { model: Producto, as: 'producto' }
+        { model: Proveedor, as: 'proveedor' }
       ],
-      order: [['fecha', 'DESC']]
+      order: [['fechaPedido', 'DESC']]
     });
   }
 
   async findPedidoById(idpedidos) {
     const pedido = await Pedido.findByPk(idpedidos, {
       include: [
-        { model: Proveedor, as: 'proveedor' },
-        { model: Producto, as: 'producto' }
+        { model: Proveedor, as: 'proveedor' }
       ]
     });
     if (!pedido) {
@@ -148,19 +148,7 @@ class InventoryService {
       throw error;
     }
 
-    const previousEstado = pedido.estado;
     await pedido.update(data);
-
-    // If status changed to "Recibido", update product stock
-    if (data.estado === 'Recibido' && previousEstado !== 'Recibido') {
-      const producto = await Producto.findByPk(pedido.idproductos);
-      if (producto) {
-        await producto.update({
-          stock: producto.stock + pedido.cantidad
-        });
-      }
-    }
-
     return await this.findPedidoById(idpedidos);
   }
 

@@ -13,8 +13,8 @@ class RatingsController {
 
   async findById(req, res, next) {
     try {
-      const { idevaluacionservicios } = req.params;
-      const evaluacion = await ratingsService.findById(idevaluacionservicios);
+      const { idevaluacion } = req.params;
+      const evaluacion = await ratingsService.findById(idevaluacion);
       return response.success(res, evaluacion);
     } catch (error) {
       next(error);
@@ -32,8 +32,8 @@ class RatingsController {
 
   async update(req, res, next) {
     try {
-      const { idevaluacionservicios } = req.params;
-      const evaluacion = await ratingsService.update(idevaluacionservicios, req.body);
+      const { idevaluacion } = req.params;
+      const evaluacion = await ratingsService.update(idevaluacion, req.body);
       return response.success(res, evaluacion, 'Evaluación actualizada exitosamente');
     } catch (error) {
       next(error);
@@ -42,8 +42,8 @@ class RatingsController {
 
   async delete(req, res, next) {
     try {
-      const { idevaluacionservicios } = req.params;
-      await ratingsService.delete(idevaluacionservicios);
+      const { idevaluacion } = req.params;
+      await ratingsService.delete(idevaluacion);
       return response.success(res, null, 'Evaluación eliminada exitosamente');
     } catch (error) {
       next(error);
