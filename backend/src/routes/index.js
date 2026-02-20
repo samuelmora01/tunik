@@ -12,6 +12,7 @@ const paymentsRoutes = require('./payments.routes');
 const inventoryRoutes = require('./inventory.routes');
 const ratingsRoutes = require('./ratings.routes');
 const dashboardRoutes = require('./dashboard.routes');
+const permisosRoutes = require('./permisos.routes');
 
 const router = express.Router();
 
@@ -48,5 +49,8 @@ router.use('/', ratingsRoutes);
 
 // Dashboard
 router.use('/dashboard', dashboardRoutes);
+
+// Permisos (admin)
+router.use('/permisos', permisosRoutes);
 
 module.exports = router;

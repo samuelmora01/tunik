@@ -1,7 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const usersController = require('../controllers/users.controller');
-const { verifyToken } = require('../middleware/auth.middleware');
+const { verifyToken, requirePermission } = require('../middleware/auth.middleware');
 const { validate } = require('../middleware/validation.middleware');
 
 const router = express.Router();
@@ -10,13 +10,14 @@ const router = express.Router();
 router.use(verifyToken);
 
 // GET /api/usuarios
-router.get('/', usersController.findAll);
+router.get('/', requirePermission('usuarios.read'), usersController.findAll);
 
 // GET /api/usuarios/:numero_documento
-router.get('/:numero_documento', usersController.findOne);
+router.get('/:numero_documento', requirePermission('usuarios.read'), usersController.findOne);
 
 // POST /api/usuarios
 router.post('/', [
+  requirePermission('usuarios.create'),
   body('numero_documento').notEmpty().withMessage('Número de documento es requerido'),
   body('tipo_documento').notEmpty().withMessage('Tipo de documento es requerido'),
   body('nombre').notEmpty().withMessage('Nombre es requerido'),
@@ -29,6 +30,7 @@ router.post('/', [
 
 // PUT /api/usuarios/:numero_documento
 router.put('/:numero_documento', [
+  requirePermission('usuarios.update'),
   body('nombre').optional().notEmpty().withMessage('Nombre no puede estar vacío'),
   body('telefono').optional().notEmpty().withMessage('Teléfono no puede estar vacío'),
   body('email').optional().isEmail().withMessage('Email inválido'),
@@ -36,6 +38,6 @@ router.put('/:numero_documento', [
 ], usersController.update);
 
 // DELETE /api/usuarios/:numero_documento
-router.delete('/:numero_documento', usersController.delete);
+router.delete('/:numero_documento', requirePermission('usuarios.delete'), usersController.delete);
 
 module.exports = router;

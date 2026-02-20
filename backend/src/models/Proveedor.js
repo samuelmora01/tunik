@@ -7,7 +7,7 @@ const Proveedor = sequelize.define('Proveedor', {
     primaryKey: true,
     autoIncrement: true
   },
-  nombreproveedor: {
+  nombre: {
     type: DataTypes.STRING(100),
     allowNull: false
   },
@@ -15,7 +15,11 @@ const Proveedor = sequelize.define('Proveedor', {
     type: DataTypes.STRING(20),
     allowNull: true
   },
-  email: {
+  correo: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  nombreempresa: {
     type: DataTypes.STRING(100),
     allowNull: true
   }

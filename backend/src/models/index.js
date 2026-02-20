@@ -20,6 +20,8 @@ const Producto = require('./Producto');
 const Proveedor = require('./Proveedor');
 const Pedido = require('./Pedido');
 const EvaluacionServicio = require('./EvaluacionServicio');
+const Permiso = require('./Permiso');
+const RolePermiso = require('./RolePermiso');
 
 // Define associations
 
@@ -111,6 +113,21 @@ User.hasMany(EvaluacionServicio, { foreignKey: 'numero_documento', as: 'evaluaci
 EvaluacionServicio.belongsTo(Servicio, { foreignKey: 'idservicios', as: 'servicio' });
 Servicio.hasMany(EvaluacionServicio, { foreignKey: 'idservicios', as: 'evaluaciones' });
 
+// Role - Permiso (many-to-many)
+Role.belongsToMany(Permiso, {
+  through: RolePermiso,
+  foreignKey: 'idroles',
+  otherKey: 'idpermisos',
+  as: 'permisos'
+});
+
+Permiso.belongsToMany(Role, {
+  through: RolePermiso,
+  foreignKey: 'idpermisos',
+  otherKey: 'idroles',
+  as: 'roles'
+});
+
 module.exports = {
   sequelize,
   Role,
@@ -131,5 +148,7 @@ module.exports = {
   Producto,
   Proveedor,
   Pedido,
-  EvaluacionServicio
+  EvaluacionServicio,
+  Permiso,
+  RolePermiso
 };

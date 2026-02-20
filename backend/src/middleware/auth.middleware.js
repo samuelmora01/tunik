@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { jwt: jwtConfig } = require('../config/security');
 const response = require('../utils/response.util');
+const { Role, Permiso } = require('../models');
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -58,8 +59,42 @@ const optionalAuth = (req, res, next) => {
   next();
 };
 
+const requirePermission = (permissionCode) => {
+  return async (req, res, next) => {
+    if (!req.user) {
+      return response.unauthorized(res, 'No autenticado');
+    }
+
+    try {
+      const role = await Role.findByPk(req.user.idroles, {
+        include: {
+          model: Permiso,
+          as: 'permisos',
+          attributes: ['codigo']
+        }
+      });
+
+      if (!role) {
+        return response.forbidden(res, 'Rol no encontrado');
+      }
+
+      const hasPermission = role.permisos?.some(p => p.codigo === permissionCode);
+
+      if (!hasPermission) {
+        return response.forbidden(res, 'No tiene permisos para esta acción');
+      }
+
+      next();
+    } catch (error) {
+      console.error('Error checking permission:', error);
+      return response.error(res, 'Error al verificar permisos', 500);
+    }
+  };
+};
+
 module.exports = {
   verifyToken,
   requireRole,
-  optionalAuth
+  optionalAuth,
+  requirePermission
 };

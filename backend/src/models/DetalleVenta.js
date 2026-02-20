@@ -32,6 +32,14 @@ const DetalleVenta = sequelize.define('DetalleVenta', {
     type: DataTypes.DECIMAL(12, 2),
     allowNull: false,
     defaultValue: 0
+  },
+  descripcionvehiculo: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  placa: {
+    type: DataTypes.STRING(20),
+    allowNull: true
   }
 }, {
   tableName: 'detalleventas',

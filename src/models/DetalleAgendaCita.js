@@ -31,6 +31,14 @@ const DetalleAgendaCita = sequelize.define('DetalleAgendaCita', {
   precio_unitario: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
+  },
+  descripcionvehiculo: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  placa: {
+    type: DataTypes.STRING(20),
+    allowNull: true
   }
 }, {
   tableName: 'detalleagendacitas',
