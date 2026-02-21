@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { jwt: jwtConfig } = require('../config/security');
 const response = require('../utils/response.util');
-const { Role, Permiso } = require('../models');
+const { Role, RolePermiso, Modulo, Accion } = require('../models');
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -31,8 +31,10 @@ const requireRole = (...roles) => {
     }
 
     const userRole = req.user.role || req.user.nombrerol;
-    
-    if (!roles.includes(userRole)) {
+    const normalizedUserRole = String(userRole || '').toLowerCase();
+    const normalizedRoles = roles.map(r => String(r || '').toLowerCase());
+
+    if (!normalizedRoles.includes(normalizedUserRole)) {
       return response.forbidden(res, 'No tiene permisos para esta acción');
     }
 
@@ -66,21 +68,37 @@ const requirePermission = (permissionCode) => {
     }
 
     try {
-      const role = await Role.findByPk(req.user.idroles, {
-        include: {
-          model: Permiso,
-          as: 'permisos',
-          attributes: ['codigo']
+      // permissionCode format: "modulo.accion" (e.g., "roles.read", "usuarios.create")
+      const [moduloCodigo, accionCodigo] = permissionCode.split('.');
+      
+      if (!moduloCodigo || !accionCodigo) {
+        console.error('Invalid permission code format:', permissionCode);
+        return response.forbidden(res, 'Código de permiso inválido');
+      }
+
+      // Find the module
+      const modulo = await Modulo.findOne({ where: { codigo: moduloCodigo } });
+      if (!modulo) {
+        return response.forbidden(res, 'Módulo no encontrado');
+      }
+
+      // Find the action
+      const accion = await Accion.findOne({ where: { codigo: accionCodigo } });
+      if (!accion) {
+        return response.forbidden(res, 'Acción no encontrada');
+      }
+
+      // Check if the role has permission for this module+action
+      const rolePermiso = await RolePermiso.findOne({
+        where: {
+          idroles: req.user.idroles,
+          idmodulo: modulo.idmodulo,
+          idaccion: accion.idaccion,
+          permitido: 1
         }
       });
 
-      if (!role) {
-        return response.forbidden(res, 'Rol no encontrado');
-      }
-
-      const hasPermission = role.permisos?.some(p => p.codigo === permissionCode);
-
-      if (!hasPermission) {
+      if (!rolePermiso) {
         return response.forbidden(res, 'No tiene permisos para esta acción');
       }
 
