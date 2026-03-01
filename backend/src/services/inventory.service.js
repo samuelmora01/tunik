@@ -1,4 +1,4 @@
-const { Producto, Proveedor, Pedido } = require('../models');
+const { Producto, Proveedor, Pedido, DetallePedidoProducto } = require('../models');
 const { Op } = require('sequelize');
 
 class InventoryService {
@@ -161,6 +161,25 @@ class InventoryService {
     }
     await pedido.destroy();
     return { message: 'Pedido eliminado exitosamente' };
+  }
+
+  // Detalles de pedido
+  async findAllDetallesPedido() {
+    return await DetallePedidoProducto.findAll({
+      include: [
+        { model: Pedido, as: 'pedido' },
+        { model: Producto, as: 'producto' }
+      ]
+    });
+  }
+
+  async findDetallesByPedido(idpedidos) {
+    return await DetallePedidoProducto.findAll({
+      where: { idpedido: idpedidos },
+      include: [
+        { model: Producto, as: 'producto' }
+      ]
+    });
   }
 }
 

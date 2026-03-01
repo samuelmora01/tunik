@@ -118,6 +118,36 @@ class InventoryController {
       next(error);
     }
   }
+
+  async findPedidoById(req, res, next) {
+    try {
+      const { idpedidos } = req.params;
+      const pedido = await inventoryService.findPedidoById(idpedidos);
+      return response.success(res, pedido);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Detalles de pedido
+  async findAllDetallesPedido(req, res, next) {
+    try {
+      const detalles = await inventoryService.findAllDetallesPedido();
+      return response.success(res, detalles);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async findDetallesByPedido(req, res, next) {
+    try {
+      const { idpedidos } = req.params;
+      const detalles = await inventoryService.findDetallesByPedido(idpedidos);
+      return response.success(res, detalles);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new InventoryController();
